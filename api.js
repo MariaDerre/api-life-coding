@@ -17,8 +17,8 @@ export function getTodos({token}) {
       })
 }
 
-export function deleteTodo(token) {
-    return fetch(host + id, {
+export function deleteTodo({token, id}) {
+    return fetch("https://wedev-api.sky.pro/api/v2/todos/" + id, {
         method: "DELETE",
         headers: {
           Authorization: token

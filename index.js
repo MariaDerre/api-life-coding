@@ -28,16 +28,16 @@ let tasks = [];
         return;
       }
       const tasksHtml = tasks
-        .map((task) => {
-          return `
-          <li class="task">
-            <p class="task-text">
-              ${task.text}
-              <button data-id="${task.id}" class="button delete-button">Удалить</button>
-            </p>
-          </li>`;
-        })
-        .join("");
+      .map((task) => {
+        return `
+            <li class="task">
+              <p class="task-text">
+                ${task.text}
+                <button data-id="${task.id}" class="button delete-button">Удалить</button>
+              </p>
+            </li>`;
+      })
+      .join("");
 
         const appHtml = `
                 <h1>Список задач</h1>
@@ -72,11 +72,14 @@ let tasks = [];
           event.stopPropagation();
 
           const id = deleteButton.dataset.id;
-          deleteTodo({token, id})
-            .then((responseData) => {
-              tasks = responseData.todos;
-              renderApp();
-            });
+
+          deleteTodo({
+            id,
+            token,
+          }).then((responseData) => {
+            tasks = responseData.todos;
+            renderApp();
+          });
         });
       }
     
