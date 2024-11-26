@@ -1,3 +1,5 @@
+import { addTodo, deleteTodo, getTodos } from "./api.js";
+
 let tasks = [];
 
     const host = 'https://wedev-api.sky.pro/api/v2/todos'
@@ -5,20 +7,7 @@ let tasks = [];
     token = null;
 
     const fetchTodosAndRender = () => {
-      return fetch(host, {
-        method: "GET",
-        headers: {
-          Authorization: token
-        }
-      })
-      .then((response) =>{
-        if (response.status === 401) {
-          // password = prompt ("Введите верный пароль")
-          // fetchTodosAndRender()
-          throw new Error("Нет авторизации")
-        }
-        return response.json();
-      })
+      return getTodos({token})
         .then((responseData) => {
           tasks = responseData.todos;
           renderApp();
@@ -88,7 +77,6 @@ let tasks = [];
         appEl.innerHTML = appHtml; 
 
       const buttonElement = document.getElementById("add-button");
-      const listElement = document.getElementById("list");
       const textInputElement = document.getElementById("text-input");
       const deleteButtons = document.querySelectorAll(".delete-button");
 
@@ -99,15 +87,7 @@ let tasks = [];
           const id = deleteButton.dataset.id;
 
           // Подписываемся на успешное завершение запроса с помощью then
-          fetch(host + id, {
-            method: "DELETE",
-            headers: {
-              Authorization: token
-            }
-          })
-            .then((response) => {
-              return response.json();
-            })
+          deleteTodo({token, id})
             .then((responseData) => {
               // Получили данные и рендерим их в приложении
               tasks = responseData.todos;
@@ -126,18 +106,9 @@ let tasks = [];
       buttonElement.disabled = true;
       buttonElement.textContent = "Задача добавляется...";
 
-      // Подписываемся на успешное завершение запроса с помощью then
-      fetch(host, {
-        method: "POST",
-        headers: {
-          Authorization: token
-        },
-        body: JSON.stringify({
-          text: textInputElement.value,
-        }),
-      })
-        .then((response) => {
-          return response.json();
+        addTodo({
+            text: textInputElement.value,
+            token
         })
         .then(() => {
           // TODO: кинуть исключение
