@@ -9,8 +9,6 @@ export function getTodos({token}) {
       })
       .then((response) =>{
         if (response.status === 401) {
-          // password = prompt ("Введите верный пароль")
-          // fetchTodosAndRender()
           throw new Error("Нет авторизации")
         }
         return response.json();
@@ -18,7 +16,7 @@ export function getTodos({token}) {
 }
 
 export function deleteTodo({token, id}) {
-    return fetch("https://wedev-api.sky.pro/api/v2/todos/" + id, {
+    return fetch("https://wedev-api.sky.pro/api/v2/todos/:id" + id, {
         method: "DELETE",
         headers: {
           Authorization: token
@@ -29,14 +27,27 @@ export function deleteTodo({token, id}) {
         })
 }
 
-export function addTodo(text, token) {
+export function addTodo({text, token}) {
     return fetch(host, {
         method: "POST",
         headers: {
           Authorization: token
         },
         body: JSON.stringify({
-          text
+          text,
+        }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+}
+
+export function login({login, password}) {
+    return fetch('https://webdev-hw-api.vercel.app/api/user/login', {
+        method: "POST",
+        body: JSON.stringify({
+          login,
+          password
         }),
       })
         .then((response) => {
